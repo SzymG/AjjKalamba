@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView img;
     private Button btn;
     private Animation frombottom;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

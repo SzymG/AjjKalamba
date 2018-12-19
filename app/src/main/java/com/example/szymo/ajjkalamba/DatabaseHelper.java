@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DB_NAME = "Records.db";
+    private static final String DB_NAME = "Records";
     private static final String DB_TABLE = "Words";
 
     //columns in this table
@@ -18,7 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String HASLO = "HASLO";
 
     private static final String CREATE_TABLE =
-            "CREATE TABLE "+ DB_NAME+" ("+
+            "CREATE TABLE "+ DB_TABLE+" ("+
                     ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
                     KATEGORIA+ " TEXT, "+
                     HASLO+ " TEXT " + ")";
@@ -30,13 +30,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_TABLE);
-        insertData("Osoba", "Bauza");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS "+DB_TABLE);
-        onCreate(db);
+        db.execSQL(CREATE_TABLE);
     }
 
     //Method for data insertion
@@ -60,5 +59,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return cursor;
 
+    }
+
+    public void clear() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM "+DB_TABLE);
     }
 }

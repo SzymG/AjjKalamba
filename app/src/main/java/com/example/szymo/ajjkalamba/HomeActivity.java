@@ -13,6 +13,7 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -20,8 +21,10 @@ public class HomeActivity extends AppCompatActivity {
     private TextView kategoia, haslo;
 
     private DatabaseHelper db;
-    ArrayList<String> listItem;
-    ArrayAdapter adapter;
+    private ArrayList<String> listItem;
+    private Cursor cursor;
+    private Random rand;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,29 +37,36 @@ public class HomeActivity extends AppCompatActivity {
         losuj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                kategoia.setText("Osoba");
-                haslo.setText("Bauza");
+                int n = rand.nextInt(listItem.size()/2);
+                kategoia.setText(listItem.get(2*n));
+                haslo.setText(listItem.get(2*n+1));
             }
         });
 
         db = new DatabaseHelper(this);
+        db.clear();
+        db.insertData("Osoba", "Bauza");
+        db.insertData("Osoba", "Nikodem");
+        db.insertData("Osoba","Szymon");
 
         listItem = new ArrayList<>();
+        rand = new Random();
 
-        //viewData();
+        viewData();
 
     }
 
     private void viewData() {
 
-        Cursor cursor = db.vievData();
+        this.cursor = db.vievData();
 
-        if (cursor.getCount() != 0){
+        if (cursor.getCount() == 0){
             Toast.makeText(this,"Brak haseł", Toast.LENGTH_SHORT).show();
-        }
-
-        else if(cursor.getCount() == 1){
-            Toast.makeText(this,"Mam jeden rekord!", Toast.LENGTH_SHORT).show();
+        }else{
+            while(cursor.moveToNext()){
+                listItem.add(cursor.getString(1));
+                listItem.add(cursor.getString(2));
+            }
         }
     }
 
