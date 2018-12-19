@@ -45,9 +45,15 @@ public class HomeActivity extends AppCompatActivity {
 
         db = new DatabaseHelper(this);
         db.clear();
-        db.insertData("Osoba", "Bauza");
-        db.insertData("Osoba", "Nikodem");
-        db.insertData("Osoba","Szymon");
+        db.insertData("Osoba", "Gryfica Gnilda Bauza");
+        db.insertData("Osoba", "Flubbershy Nikodem");
+        db.insertData("Osoba","Bumfight Sparkle Gągor");
+        db.insertData("Osoba","Dziunia Paulina");
+        db.insertData("Osoba","Bumple Jack Krysia");
+        db.insertData("Osoba", "Bimkie Guy Śmigło");
+        db.insertData("Osoba","Random Bash");
+
+
 
         listItem = new ArrayList<>();
         rand = new Random();
