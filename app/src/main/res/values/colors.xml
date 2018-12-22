@@ -16,4 +16,5 @@
  <color name="colorAccent">#0000FF</color>
  <color name="colorPrimary">#1e74ff</color>
  <color name="colorPrimaryDark">#000000</color>
+ <color name="AlphaBlue">#AA97bdfc</color>
 </resources>

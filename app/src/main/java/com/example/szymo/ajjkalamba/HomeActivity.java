@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private Button losuj;
+    private Button losuj, add;
     private TextView kategoia, haslo;
 
     private DatabaseHelper db;
@@ -43,17 +43,37 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        add = (Button) findViewById(R.id.button3);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+                //Toast.makeText(HomeActivity.this,"Dodaj nowe hasło", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         db = new DatabaseHelper(this);
-        db.clear();
-        db.insertData("Osoba", "Gryfica Gnilda Bauza");
-        db.insertData("Osoba", "Flubbershy Nikodem");
-        db.insertData("Osoba","Bumfight Sparkle Gągor");
-        db.insertData("Osoba","Dziunia Paulina");
-        db.insertData("Osoba","Bumple Jack Krysia");
-        db.insertData("Osoba", "Bimkie Guy Śmigło");
-        db.insertData("Osoba","Random Bash");
+        //db.clear();
 
+        Cursor c = db.vievData();
 
+        if(c.getCount() == 0){
+
+            /*db.insertData("Osoba", "Gryfica Gnilda Bauza");
+            db.insertData("Osoba", "Flubbershy Nikodem");
+            db.insertData("Osoba","Bumfight Sparkle Gągor");
+            db.insertData("Osoba","Dziunia Paulina");
+            db.insertData("Osoba","Bumple Jack Krysia");
+            db.insertData("Osoba", "Bimkie Guy Śmigło");
+            db.insertData("Osoba","Random Bash")*/;
+            db.insertData("Osoba","Szymon");
+            db.insertData("Osoba","Marta");
+            db.insertData("Osoba","Paulina");
+            db.insertData("Zwierzę","Cynia");
+            db.insertData("Zwierzę","Krysia");
+            db.insertData("Osoba","Mama");
+            db.insertData("Osoba","Tata");
+        }
 
         listItem = new ArrayList<>();
         rand = new Random();
@@ -62,18 +82,31 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    private void openDialog() {
+        AddDialog addDialog = new AddDialog();
+        addDialog.show(getSupportFragmentManager(),"Add dialog");
+    }
+
     private void viewData() {
 
         this.cursor = db.vievData();
+        this.listItem.clear();
 
         if (cursor.getCount() == 0){
             Toast.makeText(this,"Brak haseł", Toast.LENGTH_SHORT).show();
         }else{
-            while(cursor.moveToNext()){
+            while(cursor.moveToNext()) {
                 listItem.add(cursor.getString(1));
                 listItem.add(cursor.getString(2));
             }
+
         }
+    }
+
+    public void insertNew(String kat, String has){
+
+        db.insertData(kat,has);
+        viewData();
     }
 
     @Override
