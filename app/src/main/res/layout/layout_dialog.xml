@@ -20,4 +20,5 @@
         android:hint="Hasło"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="0dp" />
+
 </RelativeLayout>
