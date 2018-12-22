@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private Button losuj;
+    private Button losuj, add;
     private TextView kategoia, haslo;
 
     private DatabaseHelper db;
@@ -43,6 +43,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        add = (Button) findViewById(R.id.button3);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+                //Toast.makeText(HomeActivity.this,"Dodaj nowe hasło", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         db = new DatabaseHelper(this);
         db.clear();
         db.insertData("Osoba", "Gryfica Gnilda Bauza");
@@ -60,6 +69,11 @@ public class HomeActivity extends AppCompatActivity {
 
         viewData();
 
+    }
+
+    private void openDialog() {
+        AddDialog addDialog = new AddDialog();
+        addDialog.show(getSupportFragmentManager(),"Add dialog");
     }
 
     private void viewData() {
