@@ -38,6 +38,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE);
     }
 
+    //method for data deletion
+    public void deleteData(String kategoria, String haslo){
+
+        kategoria =kategoria.toUpperCase();
+        haslo = haslo.toUpperCase();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + DB_TABLE + " WHERE UPPER(" +
+            KATEGORIA + ") = '" + kategoria + "' AND UPPER(" +
+                HASLO + ") = '" + haslo +"'";
+        db.execSQL(query);
+    }
+
     //Method for data insertion
     public boolean insertData(String kategoria, String haslo){
 
@@ -56,7 +69,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "Select * from "+DB_TABLE;
         Cursor cursor = db.rawQuery(query, null);
-
         return cursor;
 
     }
