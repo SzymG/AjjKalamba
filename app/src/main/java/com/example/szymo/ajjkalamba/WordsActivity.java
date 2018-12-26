@@ -21,7 +21,7 @@ public class WordsActivity extends AppCompatActivity {
     private ArrayList listItem;
     private DatabaseHelper db;
     private ListView words_list;
-    private Button back, edit, delete;
+    private Button back, edit, delete, add;
     private View selected;
     private String kategoria, haslo;
     private int pos;
@@ -33,24 +33,42 @@ public class WordsActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         db = new DatabaseHelper(this);
+        selected = null;
 
         edit = findViewById(R.id.edit_btn);
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(selected != null){
+                    AddDialog addDialog = new AddDialog(false, kategoria, haslo);
+                    addDialog.show(getSupportFragmentManager(),"Add dialog");
+                }else {
+                    Toast.makeText(WordsActivity.this,"Wybierz hasło do edytowania!",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         delete = findViewById(R.id.delete_btn);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selected.setSelected(false);
-                db.deleteData(kategoria, haslo);
-                adapter.remove(adapter.getItem(pos));
-                adapter.notifyDataSetChanged();
-                Toast.makeText(WordsActivity.this,"Pomyślnie usunięto " + kategoria + ": " + haslo, Toast.LENGTH_SHORT).show();
+                if(selected != null){
+                    selected.setSelected(false);
+                    db.deleteData(kategoria, haslo);
+                    adapter.remove(adapter.getItem(pos));
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(WordsActivity.this,"Pomyślnie usunięto " + kategoria + ": " + haslo, Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(WordsActivity.this,"Nie zaznaczono hasła do usunięcia",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
+        add = findViewById(R.id.add_btn);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddDialog addDialog = new AddDialog(true, true);
+                addDialog.show(getSupportFragmentManager(),"Add dialog");
             }
         });
 
@@ -60,8 +78,15 @@ public class WordsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View arg1, int position, long id) {
                 pos = position;
-                arg1.setSelected(true);
-                selected = arg1;
+
+                if(selected == arg1){
+                    arg1.setSelected(false);
+                    selected = null;
+                }else {
+                    arg1.setSelected(true);
+                    selected = arg1;
+                }
+
                 String s = words_list.getItemAtPosition(position).toString();
                 String parts[] = s.split(": ");
                 kategoria = parts[0];
@@ -72,7 +97,7 @@ public class WordsActivity extends AppCompatActivity {
         listItem = new ArrayList();
         back = findViewById(R.id.button7);
 
-        adapter=new ArrayAdapter<String>(this,
+        adapter = new ArrayAdapter<String>(this,
                 R.layout.mytextview, R.id.text1,
                 listItem);
         words_list.setAdapter(adapter);
@@ -98,10 +123,24 @@ public class WordsActivity extends AppCompatActivity {
         while (cursor.moveToNext()){
 
             String s = "";
-            //s+=cursor.getString(0)+" ";                       ID
+            //s+=cursor.getString(0)+" ";                       ID1
             s+=cursor.getString(1) + ": ";      //   Kategoria
             s+=cursor.getString(2);             //   Hasło
             listItem.add(s);
         }
+    }
+
+    public void insertNew(String kat, String has) {
+        db.deleteData(kategoria,haslo);
+        adapter.remove(adapter.getItem(pos));
+        db.insertData(kat,has);
+        listItem.add(kat+": " +has);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void insert(String kat, String has) {
+        db.insertData(kat,has);
+        listItem.add(kat+": " +has);
+        adapter.notifyDataSetChanged();
     }
 }

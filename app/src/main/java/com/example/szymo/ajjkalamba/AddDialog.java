@@ -1,6 +1,6 @@
 package com.example.szymo.ajjkalamba;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -12,11 +12,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+@SuppressLint("ValidFragment")
 public class AddDialog extends AppCompatDialogFragment {
 
+    private boolean createNew, wordsAct;
     private EditText editTextKategoria, editTextHasło;
     private  AlertDialog.Builder builder;
     private View view;
+    private String kat, has;
+
+    public AddDialog(boolean createNew) {
+        this.createNew = createNew;
+    }
+
+    public AddDialog(boolean createNew, String kategoria, String haslo) {
+        this.createNew = createNew;
+        this.kat = kategoria;
+        this.has = haslo;
+    }
+
+    public AddDialog(boolean createNew, boolean wordsAct) {
+        this.createNew = createNew;
+        this.wordsAct = wordsAct;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -24,10 +42,21 @@ public class AddDialog extends AppCompatDialogFragment {
         builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.layout_dialog, null);
-        builder.setView(view).setTitle("Dodaj nowe hasło!").setNegativeButton("Powrót", new DialogInterface.OnClickListener() {
+        String title;
+
+        editTextKategoria = view.findViewById(R.id.category);
+        editTextHasło = view.findViewById(R.id.word);
+
+        if (createNew){
+            title = "Dodaj nowe hasło!";
+        }else {
+            title = "Edytuj hasło!";
+            editTextHasło.setText(has);
+            editTextKategoria.setText(kat);
+        }
+        builder.setView(view).setTitle(title).setNegativeButton("Powrót", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
             }
         })
         .setPositiveButton("Zatwierdź", new DialogInterface.OnClickListener() {
@@ -36,8 +65,6 @@ public class AddDialog extends AppCompatDialogFragment {
             }
         });
 
-        editTextKategoria = view.findViewById(R.id.category);
-        editTextHasło = view.findViewById(R.id.word);
         return builder.create();
     }
 
@@ -63,10 +90,25 @@ public class AddDialog extends AppCompatDialogFragment {
                         Toast.makeText(getContext(),"Wpisz hasło!", Toast.LENGTH_SHORT).show();
                     }else{
                         wantToCloseDialog = true;
-                        HomeActivity ha = (HomeActivity) getActivity();
-                        ha.insertNew(editTextKategoria.getText().toString(),
-                                editTextHasło.getText().toString());
-                        Toast.makeText(getContext(),"Pomyślnie dodano nowe hasło!", Toast.LENGTH_SHORT).show();
+                        if (createNew){
+                            if(wordsAct){
+                                WordsActivity wa = (WordsActivity) getActivity();
+                                wa.insert(editTextKategoria.getText().toString(),
+                                        editTextHasło.getText().toString());
+                            }else{
+                                HomeActivity ha = (HomeActivity) getActivity();
+                                ha.insertNew(editTextKategoria.getText().toString(),
+                                        editTextHasło.getText().toString());
+                            }
+
+                            Toast.makeText(getContext(),"Pomyślnie dodano nowe hasło!", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            WordsActivity wa = (WordsActivity) getActivity();
+                            wa.insertNew(editTextKategoria.getText().toString(),
+                                    editTextHasło.getText().toString());
+                            Toast.makeText(getContext(),"Pomyślnie edytowano hasło!", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     if(wantToCloseDialog)

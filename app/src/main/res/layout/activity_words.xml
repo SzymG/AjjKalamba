@@ -27,11 +27,18 @@
         android:layout_marginBottom="5dp"
         android:layout_gravity="center">
 
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/add_btn"
+            android:background="@drawable/add_button"/>
 
         <Button
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             android:id="@+id/edit_btn"
             android:background="@drawable/edit_button"/>
 

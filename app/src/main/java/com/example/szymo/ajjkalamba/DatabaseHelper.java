@@ -67,7 +67,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Method for viewing data (whole data)
     public Cursor vievData(){
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "Select * from "+DB_TABLE;
+        String query = "Select * from "+DB_TABLE +" ORDER BY "+KATEGORIA;
         Cursor cursor = db.rawQuery(query, null);
         return cursor;
 

@@ -24,6 +24,7 @@ public class HomeActivity extends AppCompatActivity {
     private ArrayList<String> listItem;
     private Cursor cursor;
     private Random rand;
+    private String previousCategory = "";
 
 
     @Override
@@ -37,9 +38,8 @@ public class HomeActivity extends AppCompatActivity {
         losuj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int n = rand.nextInt(listItem.size()/2);
-                kategoia.setText(listItem.get(2*n));
-                haslo.setText(listItem.get(2*n+1));
+
+                losuj();
             }
         });
 
@@ -82,8 +82,20 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+    private void losuj() {
+
+        int n = rand.nextInt(listItem.size()/2);
+        if(listItem.get(2*n).compareTo(previousCategory) != 0 ){
+            previousCategory = listItem.get(2*n);
+            kategoia.setText(listItem.get(2*n));
+            haslo.setText(listItem.get(2*n+1));
+        }else{
+            losuj();
+        }
+    }
+
     private void openDialog() {
-        AddDialog addDialog = new AddDialog();
+        AddDialog addDialog = new AddDialog(true);
         addDialog.show(getSupportFragmentManager(),"Add dialog");
     }
 
