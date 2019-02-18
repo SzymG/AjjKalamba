@@ -117,8 +117,24 @@ public class HomeActivity extends AppCompatActivity {
 
     public void insertNew(String kat, String has){
 
-        db.insertData(kat,has);
-        viewData();
+        boolean noRepeat = true;
+
+        for(int i = 0; i < listItem.size(); i += 2){
+
+            if (listItem.get(i).toUpperCase().compareTo(kat.toUpperCase()) == 0){
+                if (listItem.get(i+1).toUpperCase().compareTo(has.toUpperCase()) == 0){
+                    noRepeat = false;
+                    Toast.makeText(this,"Wpisane hasło już istnieje!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        if (noRepeat){
+            db.insertData(kat,has);
+            viewData();
+            Toast.makeText(this,"Pomyślnie dodano nowe hasło!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     @Override

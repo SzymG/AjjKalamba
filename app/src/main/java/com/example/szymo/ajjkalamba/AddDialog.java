@@ -93,21 +93,40 @@ public class AddDialog extends AppCompatDialogFragment {
                         if (createNew){
                             if(wordsAct){
                                 WordsActivity wa = (WordsActivity) getActivity();
-                                wa.insert(editTextKategoria.getText().toString(),
-                                        editTextHasło.getText().toString());
+
+                                String kat = editTextKategoria.getText().toString();
+                                String has = editTextHasło.getText().toString();
+
+                                kat = deleteSpaces(kat);
+                                has = deleteSpaces(has);
+
+                                wa.insert(kat, has);
                             }else{
                                 HomeActivity ha = (HomeActivity) getActivity();
-                                ha.insertNew(editTextKategoria.getText().toString(),
-                                        editTextHasło.getText().toString());
+                                String kat = editTextKategoria.getText().toString();
+                                String has = editTextHasło.getText().toString();
+
+                                kat = deleteSpaces(kat);
+                                has = deleteSpaces(has);
+
+                                ha.insertNew(kat, has);
                             }
 
-                            Toast.makeText(getContext(),"Pomyślnie dodano nowe hasło!", Toast.LENGTH_SHORT).show();
+
                         }
                         else {
                             WordsActivity wa = (WordsActivity) getActivity();
-                            wa.insertNew(editTextKategoria.getText().toString(),
-                                    editTextHasło.getText().toString());
-                            Toast.makeText(getContext(),"Pomyślnie edytowano hasło!", Toast.LENGTH_SHORT).show();
+                            String kat = editTextKategoria.getText().toString();
+                            String has = editTextHasło.getText().toString();
+
+                            kat = deleteSpaces(kat);
+                            has = deleteSpaces(has);
+
+                            boolean b = wa.insertNew(kat, has);
+                            if (b){
+
+                                Toast.makeText(getContext(),"Pomyślnie edytowano hasło!", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
@@ -117,5 +136,16 @@ public class AddDialog extends AppCompatDialogFragment {
                 }
             });
         }
+    }
+
+    private String deleteSpaces(String str) {
+
+        int i = str.length() - 1;
+
+        while (str.charAt(i) == ' '){
+            str = str.substring(0,i);
+            i--;
+        }
+        return str;
     }
 }

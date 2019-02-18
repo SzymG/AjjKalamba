@@ -4,13 +4,11 @@ import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ import java.util.ArrayList;
 public class WordsActivity extends AppCompatActivity {
 
     private ArrayAdapter<String> adapter;
-    private ArrayList listItem;
+    private ArrayList<String> listItem;
     private DatabaseHelper db;
     private ListView words_list;
     private Button back, edit, delete, add;
@@ -56,7 +54,7 @@ public class WordsActivity extends AppCompatActivity {
                     db.deleteData(kategoria, haslo);
                     adapter.remove(adapter.getItem(pos));
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(WordsActivity.this,"Pomyślnie usunięto " + kategoria + ": " + haslo, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WordsActivity.this,"Pomyślnie usunięto " + kategoria.toUpperCase() + ": " + haslo.toUpperCase(), Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(WordsActivity.this,"Nie zaznaczono hasła do usunięcia",Toast.LENGTH_SHORT).show();
                 }
@@ -130,17 +128,55 @@ public class WordsActivity extends AppCompatActivity {
         }
     }
 
-    public void insertNew(String kat, String has) {
-        db.deleteData(kategoria,haslo);
-        adapter.remove(adapter.getItem(pos));
-        db.insertData(kat,has);
-        listItem.add(kat+": " +has);
-        adapter.notifyDataSetChanged();
+    public boolean insertNew(String kat, String has) {
+
+        boolean b = false;
+
+        if (checkRepeat(kat, has)){
+
+            db.deleteData(kategoria,haslo);
+            adapter.remove(adapter.getItem(pos));
+            db.insertData(kat,has);
+            Toast.makeText(this,"Pomyślnie dodano nowe hasło!", Toast.LENGTH_SHORT).show();
+            b = true;
+            listItem.add(kat+": " +has);
+            adapter.notifyDataSetChanged();
+        }
+        return b;
     }
 
     public void insert(String kat, String has) {
-        db.insertData(kat,has);
-        listItem.add(kat+": " +has);
-        adapter.notifyDataSetChanged();
+
+        if (checkRepeat(kat, has)){
+
+            db.insertData(kat,has);
+            Toast.makeText(this,"Pomyślnie dodano nowe hasło!", Toast.LENGTH_SHORT).show();
+            listItem.add(kat+": " +has);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private boolean checkRepeat(String kat, String has) {
+
+        boolean noRepeat = true;
+
+        for(int i = 0; i < listItem.size(); i++){
+            String s = listItem.get(i);
+            String parts[] = s.split(": ");
+
+            String katS = parts[0];
+            String hasS = parts[1];
+
+            if (katS.toUpperCase().compareTo(kat.toUpperCase()) == 0){
+
+                if (hasS.toUpperCase().compareTo(has.toUpperCase()) == 0){
+                    noRepeat = false;
+                    Toast.makeText(this,"Wpisane hasło już istnieje!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+        return noRepeat;
+
     }
 }
