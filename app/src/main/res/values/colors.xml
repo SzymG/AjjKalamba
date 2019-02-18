@@ -17,4 +17,5 @@
  <color name="colorPrimary">#1e74ff</color>
  <color name="colorPrimaryDark">#000000</color>
  <color name="AlphaBlue">#AA97bdfc</color>
+ <color name="DarkerAlphaBlue">#EE4679d8</color>
 </resources>

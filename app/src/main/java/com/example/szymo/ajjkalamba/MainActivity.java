@@ -14,8 +14,8 @@ import android.widget.ImageView;
 public class MainActivity extends AppCompatActivity {
 
     private ImageView img;
-    private Button btn;
-    private Animation frombottom;
+    private Button btn, settings;
+    private Animation frombottom, fromleft;
 
 
     @Override
@@ -34,6 +34,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent homeIntent = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(homeIntent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+
+        settings = (Button) findViewById(R.id.button4);
+        fromleft = AnimationUtils.loadAnimation(this, R.anim.fromleft);
+        settings.setAnimation(fromleft);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent homeIntent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(homeIntent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             }
